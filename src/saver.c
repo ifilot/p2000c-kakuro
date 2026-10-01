@@ -12,16 +12,17 @@
  * phosphor is driven and never at one place for long.
  *
  * Every key the program takes goes through here, which also filters out
- * doubled keys. While the board is being drawn the terminal board is busy
- * with picture data, and a key pressed meanwhile can arrive twice (its
- * release seen late, the keyboard's auto-repeat fires). So when a key kept
- * the program busy for BUSY_TICKS or more (a shot and the reply, a whole
- * screen), the same key again is dropped if it was already waiting when
- * the program became ready for the next key, or comes within ECHO_TICKS
- * after that: sooner than anyone reacts to the new picture. Quick keys (a
- * cursor step) are never filtered, so a key tapped or held repeats as
- * usual. Without the BIOS clock every waiting copy of the previous key is
- * dropped, and one within ECHO_POLLS polls.
+ * doubled keys. The terminal board finds keys through the video refresh
+ * and tells a held key from a released one at the vertical sync
+ * interrupts; while it is busy with picture data it can take a key that is
+ * still held down for a new press, most of all in the graphics mode. Such
+ * a copy comes while the finger is still on the key, so the same key
+ * arriving within HOLD_TICKS (1/3 s, a normal press) of the previous one
+ * is dropped, cursor keys included. A key held longer repeats, about three
+ * times a second. For the arrival times, key_watch() notes when a key
+ * comes in while the program is drawing. Without the BIOS clock a copy of
+ * the previous key is dropped if it was waiting when the program became
+ * ready for the next key, or comes within ECHO_POLLS polls.
  */
 #include "video.h"
 #include "saver.h"
@@ -75,40 +76,53 @@ static unsigned char screen_saver(void)
 #define SAVER_TICKS ((unsigned int)SAVER_SECONDS * CLOCK_TICKS_PER_SECOND)   /* 18000 < 65536 */
 
 #define ECHO_POLLS (POLLS_PER_SECOND / 4)
-#define ECHO_TICKS 15                        /* 1/4 s */
-#define BUSY_TICKS 20                        /* 1/3 s */
+#define HOLD_TICKS 20                        /* 1/3 s */
 
 static unsigned char last_key;
-static unsigned int key_time;                /* clock tick when last_key was taken */
-static unsigned int ready_time;              /* ... when the program was ready for more */
-static unsigned char after_busy;             /* last_key kept the program busy */
+static unsigned int last_arrival;            /* clock tick when last_key came in */
+static unsigned char waiting;                /* key_watch() saw a key come in ... */
+static unsigned int arrival;                 /* ... at this tick */
 
-static unsigned char take(unsigned char key)
+void key_watch(void)
 {
-    last_key = key;
-    key_time = clock_ticks();
-    return key;
+    if (!waiting && conready()) {
+        arrival = clock_ticks();
+        waiting = 1;
+    }
 }
 
-static void ready(void)
+static void key_taken(unsigned char key)
 {
-    ready_time = clock_ticks();
-    after_busy = !clock_available || (unsigned int)(ready_time - key_time) >= BUSY_TICKS;
+    last_key = key;
+    last_arrival = clock_ticks();
+    waiting = 0;
+}
+
+/* Reads the waiting key; nonzero `fresh` says the program has been ready
+ * for a while (without the clock: no copy of the previous key is dropped).
+ * Returns the key, or 0 for a dropped copy. */
+static unsigned char read_key(unsigned char fresh)
+{
+    unsigned int at = waiting ? arrival : clock_ticks();
+    unsigned char key = conin();
+    waiting = 0;
+    if (key == last_key &&
+        (clock_available ? (unsigned int)(at - last_arrival) < HOLD_TICKS : !fresh))
+        return 0;
+    last_key = key;
+    last_arrival = at;
+    return key;
 }
 
 unsigned char wait_key_idle(void (*redraw)(void), void (*idle)(void))
 {
     unsigned int polls = 0, seconds = 0, quiet = 0, start = clock_ticks();
     unsigned char expired, key;
-    ready();
     for (;;) {
         if (conready()) {
-            key = conin();
-            if (key == last_key && after_busy &&
-                (clock_available ? (unsigned int)(clock_ticks() - ready_time) < ECHO_TICKS
-                                 : quiet < ECHO_POLLS))
-                continue;                       /* a doubled key */
-            return take(key);
+            if ((key = read_key(quiet >= ECHO_POLLS)) != 0)
+                return key;
+            continue;                           /* a doubled key */
         }
         if (quiet < ECHO_POLLS)
             quiet++;
@@ -125,10 +139,9 @@ unsigned char wait_key_idle(void (*redraw)(void), void (*idle)(void))
                 expired = 1;
         }
         if (expired) {
-            take(screen_saver());               /* the key only wakes the screen */
+            key_taken(screen_saver());          /* the key only wakes the screen */
             redraw();
-            ready();
-            start = ready_time;
+            start = clock_ticks();
             seconds = 0;
             quiet = 0;
         }

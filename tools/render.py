@@ -176,18 +176,21 @@ def combinations(total: int, length: int) -> list[str]:
 def act(keys: str, until: str = PLAYING) -> list[str]:
     """A board action: wait until it has been processed (the status line
     reads 'Bezig...' while the board is updated, then the result). A pause
-    comes first, as the game drops a key that repeats the previous one
-    shortly after a long update."""
-    return ["--run", "1000000", "--send", keys, "--wait-for", "Bezig", "--wait-for", until]
+    of 0.4 s comes first, as the game drops a key that repeats the previous
+    one within a third of a second (the terminal's doubled keys)."""
+    return ["--run", "1600000", "--send", keys, "--wait-for", "Bezig", "--wait-for", until]
 
 
 def choose(k: int) -> list[str]:
     """From the start screen (first puzzle chosen) into puzzle k (0-based):
-    down to its row with 's', along it with 'd', then RETURN."""
+    down to its row with 's', along it with 'd', then RETURN. The keys
+    alternate lower and upper case, as the program drops a key that repeats
+    the previous one within a third of a second (the terminal's doubled keys)."""
     actions = ["--wait-for", START]
     row = next(g for g, (first, count) in enumerate(groups()) if first <= k < first + count)
     first = groups()[row][0]
     keys = "s" * row + "d" * (k - first)
+    keys = "".join(c.upper() if i % 2 else c for i, c in enumerate(keys))
     for key in keys:
         actions += ["--run", "300000", "--send", key]
     return actions + ["--wait-for", f"Puzzel {k + 1:2}:", "--send", "\\r", "--wait-for", PLAYING]

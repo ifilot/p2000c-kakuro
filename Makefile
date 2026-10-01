@@ -5,7 +5,7 @@
 # emulator, disk tool and dist/pro/ disk images) and, for the character-ROM
 # font, p2000c-emulator.
 
-VERSION    = 1.0.0
+VERSION    = 1.0.1
 BUILD_DATE = $(shell date +%Y-%m-%d)
 
 # -SO2, not -SO3: p2000c-battleship found the level-3 peephole rules

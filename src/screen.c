@@ -27,6 +27,7 @@
 #include "game.h"
 #include "screen.h"
 #include "sprites.h"
+#include "saver.h"
 
 #define ESC          27
 #define RUN_GAP      7                      /* an ESC r header costs 7 bytes */
@@ -186,6 +187,7 @@ static void runs(const unsigned char *buf, unsigned char line, unsigned char col
         }
         video_flush_rect(COLROW(col0 + first, line), WH(last - first + 1, 1));
     }
+    key_watch();                            /* a key held while drawing (saver.c) */
 }
 
 /* One ESC r with framebuffer lines first..first+n-1 whole: it starts on the
@@ -203,6 +205,7 @@ static void send_chunk(unsigned char first, unsigned char count)
         if (line-- == first)
             break;
     }
+    key_watch();
 }
 
 /* Sends the band of lines collected in piece[] the cheaper way. */

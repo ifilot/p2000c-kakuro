@@ -1,7 +1,7 @@
 # Kakuro for the Philips P2000C
 
 [![Build](https://github.com/ifilot/p2000c-kakuro/actions/workflows/build.yml/badge.svg)](https://github.com/ifilot/p2000c-kakuro/actions/workflows/build.yml)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/ifilot/p2000c-kakuro/releases)
+[![Version](https://img.shields.io/badge/version-1.0.1-blue)](https://github.com/ifilot/p2000c-kakuro/releases)
 [![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE)
 
 Kakuro, the number crossword, for the Philips P2000C running CP/M. There are 95
@@ -67,8 +67,9 @@ the panel says *Nog niet goed...*. A new best time is stored in
 `KAKURO.DAT` on the current drive. Leaving a puzzle in progress with `N`
 or `ESC` asks for a confirmation. After five minutes without a keypress a
 screen saver blanks the picture; any key brings it back without doing
-anything else. A key that repeats the previous one right after a long
-screen update is ignored, so a single press never acts twice.
+anything else. A key that repeats the previous one within a third of a
+second is ignored, so a single press never acts twice; a key held down
+repeats about three times a second.
 
 ## Puzzles
 

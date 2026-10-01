@@ -4,8 +4,9 @@
  * After every change the board is brought up to date through the screen
  * module and the panel through the panel module; the status line is always
  * written last, so it doubles as a display-complete marker for the tests.
- * Doubled keys (the terminal board's auto-repeat firing while it is busy
- * with picture data) are filtered in saver.c, where every key is read.
+ * Doubled keys (the terminal board taking a held key for a new press
+ * while it is busy with picture data) are filtered in saver.c, where every
+ * key is read.
  */
 #include "video.h"
 #include "puzzle.h"

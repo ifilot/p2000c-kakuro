@@ -18,4 +18,8 @@ extern unsigned char wait_key(void (*redraw)(void));
  * (the game uses it to keep its clock display current). idle may be 0. */
 extern unsigned char wait_key_idle(void (*redraw)(void), void (*idle)(void));
 
+/* Notes the arrival time of a key that comes in while the program is busy
+ * drawing; cheap, to be called every few tens of milliseconds. */
+extern void key_watch(void);
+
 #endif

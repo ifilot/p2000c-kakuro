@@ -18,7 +18,8 @@ For a puzzle of every size and difficulty it checks:
 And once: a wrong last digit gives "Nog niet goed...", leaving a puzzle in
 progress asks for confirmation, N moves on to the next puzzle, the start
 screen marks the chosen puzzle in inverse video, the best time survives a
-restart (KAKURO.DAT), the screen saver starts after five minutes, the key
+restart (KAKURO.DAT), a key that arrives twice at once counts once, on
+the start screen and in the game, the screen saver starts after five minutes, the key
 that ends it changes nothing, and the game clock keeps counting through a
 screen saver of more than 18 minutes.
 
@@ -223,6 +224,17 @@ def check_once():
     run(["--wait-for", START, "--run", "300000", "--send", "d", "--wait-for", "Puzzel  2:"], trace=trace)
     if b"\x1b0\x50 2" not in trace.read_bytes():
         errors.append("the chosen puzzle is not shown in inverse video")
+
+    # doubled keys: "dd" at once is one step, a "d" a moment later another
+    state, _, _ = run(["--wait-for", START, "--run", "300000", "--send", "dd", "--run", "1600000",
+                       "--send", "d", "--wait-for", "Puzzel  3:", "--run", SETTLE])
+    if "Puzzel  3:" not in screen_text(state):
+        errors.append("start screen: \"dd\" at once did not count as one step")
+    where = step(p, step(p, todo[0], "s"), "s")       # a third step would go further
+    _, _, mem = run(choose(0) + ["--run", "1600000", "--send", "ss", "--run", "1600000", "--send", "s",
+                                 "--run", "4000000"], {"_cur": 1})
+    if mem["_cur"][0] != where:
+        errors.append(f"game: after \"ss\" and \"s\" the cursor is at {mem['_cur'][0]}, not {where}")
 
     # the best time survives a restart
     state, _, _ = run(choose(0) + fill(p) + ["--run", "1000000", "--send", "\\x1b", "--wait-for", START,
