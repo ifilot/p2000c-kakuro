@@ -1,0 +1,68 @@
+{
+  "id": "kakuro",
+  "command": "KAKURO",
+  "artifacts": [
+    "KAKURO.COM"
+  ],
+  "boot_marker": "Kies een puzzel",
+  "screenshots": [
+    "docs/puzzle7x7.png",
+    "docs/puzzle10x10.png"
+  ],
+  "translations": {
+    "nl": {
+      "pageTitle": "Kakuro — Philips P2000C",
+      "pageDescription": "95 getallenpuzzels van 6×6 tot 10×10. Vul de juiste sommen in zonder een cijfer binnen een reeks te herhalen.",
+      "homeLabel": "Kakuro — Philips P2000C",
+      "gameTitle": "Kakuro",
+      "gameDescription": "95 getallenpuzzels van 6×6 tot 10×10. Vul de juiste sommen in zonder een cijfer binnen een reeks te herhalen.",
+      "aboutTitle": "Zo speelt u",
+      "aboutBody": "Het originele CP/M-spel start automatisch in uw browser. Klik op het scherm voor toetsenbordinvoer. Reset start het spel opnieuw. De speltaal is Nederlands.",
+      "controlsBody": "Kies een puzzel met de pijltjes en Enter. Pijltjes of WASD verplaatsen de cursor; 1–9 vult een cijfer in. 0 of spatie: wissen · Tab: volgend leeg vak · H: hulp · Esc: puzzelkeuze.",
+      "distribution": "KAKURO",
+      "eyebrow": "EEN SPEL VOOR DE PHILIPS P2000C",
+      "play": "SPEEL NU",
+      "bundle": "ALLE SPELLEN OP ÉÉN IMAGE",
+      "bundleBody": "Neem de complete P2000C ZuluBlaster-distributie: alle zes spellen, CP/M, toepassingen en ontwikkelgereedschap in één kant-en-klare SD-kaartimage. Kies Navigator voor het spellenmenu, of de CP/M-editie voor de opdrachtprompt.",
+      "bundleDownload": "DOWNLOAD DE COMPLETE IMAGE",
+      "bundleTry": "PROBEER NAVIGATOR",
+      "screenshots": "IN BEELD",
+      "moreGames": "MEER P2000C-SPELLEN",
+      "screenCaption": "Origineel P2000C-scherm",
+      "space": "SPATIE",
+      "position": "STELLING BEKIJKEN",
+      "controlsLabel": "Bediening op het scherm",
+      "up": "Omhoog",
+      "down": "Omlaag",
+      "left": "Links",
+      "right": "Rechts"
+    },
+    "en": {
+      "pageTitle": "Kakuro — Philips P2000C",
+      "pageDescription": "95 number puzzles from 6×6 to 10×10. Complete each sum without repeating a digit within a run.",
+      "homeLabel": "Kakuro — Philips P2000C",
+      "gameTitle": "Kakuro",
+      "gameDescription": "95 number puzzles from 6×6 to 10×10. Complete each sum without repeating a digit within a run.",
+      "aboutTitle": "How to play",
+      "aboutBody": "The original CP/M game starts automatically in your browser. Click the screen to use your keyboard. Reset restarts the game. The game itself is in Dutch.",
+      "controlsBody": "Choose a puzzle with arrows and Enter. Arrows or WASD move the cursor; 1–9 enters a digit. 0 or Space: clear · Tab: next empty cell · H: help · Esc: puzzle selection.",
+      "distribution": "KAKURO",
+      "eyebrow": "A GAME FOR THE PHILIPS P2000C",
+      "play": "PLAY NOW",
+      "bundle": "ALL GAMES ON ONE IMAGE",
+      "bundleBody": "Get the complete P2000C ZuluBlaster distribution: all six games, CP/M, applications and development tools in one ready-to-use SD-card image. Choose Navigator for the game menu, or the CP/M edition for the command prompt.",
+      "bundleDownload": "DOWNLOAD THE COMPLETE IMAGE",
+      "bundleTry": "TRY NAVIGATOR",
+      "screenshots": "SCREENSHOTS",
+      "moreGames": "MORE P2000C GAMES",
+      "screenCaption": "Original P2000C display",
+      "space": "SPACE",
+      "position": "VIEW A POSITION",
+      "controlsLabel": "On-screen controls",
+      "up": "Up",
+      "down": "Down",
+      "left": "Left",
+      "right": "Right"
+    }
+  }
+}
